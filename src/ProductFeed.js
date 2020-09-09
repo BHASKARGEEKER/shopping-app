@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { CartCard } from './CartCard';
 
 export default class ProductFeed extends React.Component {
     constructor(props){
@@ -19,7 +20,7 @@ export default class ProductFeed extends React.Component {
                 limit: 25
             },
             headers: {
-                "X-Authorization": "pk_18506b82013b046be195347e8aaa4de88f31e549b7943",
+                "X-Authorization": "pk_18797aad803e18b5c76f7bd068f8b010f00d7a57c4e33",
                 "Accept": "application/json",
                 "Content-Type": "application/json",
             }
@@ -34,10 +35,10 @@ export default class ProductFeed extends React.Component {
 
     createCartForFirstTime = () => {
         axios({
-            url: "https://api.chec.io/v1/carts",
+            url: "https://api.chec.io/v1/products",
             method: 'GET',
             headers: {
-                "X-Authorization": "pk_18506b82013b046be195347e8aaa4de88f31e549b7943",
+                "X-Authorization": "pk_18797aad803e18b5c76f7bd068f8b010f00d7a57c4e33",
                 "Accept": "application/json",
                 "Content-Type": "application/json",
             }
@@ -59,7 +60,7 @@ export default class ProductFeed extends React.Component {
             url:  `https://api.chec.io/v1/carts/${localStorage.getItem('cartID')}`,
             method: 'GET',
             headers: {
-                "X-Authorization": "pk_18506b82013b046be195347e8aaa4de88f31e549b7943",
+                "X-Authorization": "pk_18797aad803e18b5c76f7bd068f8b010f00d7a57c4e33",
                 "Accept": "application/json",
                 "Content-Type": "application/json",
             }
@@ -84,7 +85,7 @@ export default class ProductFeed extends React.Component {
             url: `https://api.chec.io/v1/carts/${cartID}`,
             method: "POST",
             headers: {
-                "X-Authorization": "pk_18506b82013b046be195347e8aaa4de88f31e549b7943",
+                "X-Authorization": "pk_18797aad803e18b5c76f7bd068f8b010f00d7a57c4e33",
                 "Content-Type": "application/json",
                 "Accept": "application/json",
             },
@@ -110,6 +111,7 @@ export default class ProductFeed extends React.Component {
 
     componentDidMount(){
         this.loadProducts();
+
         localStorage.getItem('cartID') ?
         this.loadCartDataIfAlreadyCreated() :
         this.createCartForFirstTime();
@@ -128,19 +130,20 @@ export default class ProductFeed extends React.Component {
     }
 
     render(){
+
+        const { cartData: { id, total_unique_items, subtotal } } = this.state;
+
         return(
             <div>
                 {
-                    this.state.cartData.id && (
-                        <div className="card" style={{width: '18rem', margin: 'auto'}}>
-                            <div className="card-body">
-                                <h5 className="card-title">Total Products - {this.state.cartData.total_unique_items}</h5>
-                                <h6 className="card-subtitle mb-2 text-muted">Total Cart Value - {this.state.cartData.subtotal.formatted_with_symbol} </h6>
-                                <button className='btn btn-success'>Checkout</button>
-                            </div>
-                        </div>
-                    )
+                    id &&
+                    <CartCard
+                        totalProducts={total_unique_items}
+                        totalValue={subtotal.formatted_with_symbol}
+                        onFeed={true}
+                    />
                 }
+
                 <div style={{display: 'flex', flexWrap: 'wrap'}}>
                     {
                         this.state.products.map((product, index) => {
@@ -152,18 +155,17 @@ export default class ProductFeed extends React.Component {
                                         <p className="badge badge-pill badge-secondary">{product.price.formatted_with_symbol}</p>
 
                                         <p className="card-text" dangerouslySetInnerHTML={{__html: product.description}}></p>
-                                        {
-                                            product.active ? this.renderButton(product.id) : <div className='text-danger'>Currently Unavailable</div>
-                                        }
-                                    </div>
-                                </div>
+                        {
+                          product.active ? this.renderButton(product.id) : <div className='text-danger'>Currently Unavailable</div>
+                        }
+                           </div>
+                          </div>
                             )
                         })
-                    }
-                </div>
-            </div>
+                     }
+                  </div>
+
+               </div>
         )
     }
 }
-
-
