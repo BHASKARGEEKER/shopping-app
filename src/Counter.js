@@ -8,13 +8,6 @@ export const Counter = (props) => {
 
     return (
         <div>
-            <p>
-                Time is {time.toLocaleString()}
-                <button onClick={() => {setTime(new Date())}}>
-                    Refresh
-                </button>
-            </p>
-
 
             <button
                 className='btn btn-secondary'
