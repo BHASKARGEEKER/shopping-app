@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from  'axios';
 import { CartCard } from './CartCard';
+import { Counter } from './Counter';
 
 export default class Checkout extends React.Component {
     constructor(props){
@@ -80,7 +81,7 @@ export default class Checkout extends React.Component {
         const { totalItems, totalValue, cartItems } = this.state;
 
         return(
-            <div>
+            <React.Fragment>
                 <div>
                     <CartCard
                         totalProducts={totalItems}
@@ -103,7 +104,9 @@ export default class Checkout extends React.Component {
                                         <div className="card-body">
                                             <h5 className="card-title">{name}</h5>
                                             <p className="card-text">Price - {formatted_with_symbol}</p>
-                                            <p className="card-text">Quantity - {quantity}</p>
+                                            <p className="card-text">
+                                                <Counter quantity={quantity} />
+                                            </p>
                                             <button className='btn btn-danger' onClick={() => {this.handleDelete(id)}}>Delete</button>
                                         </div>
                                         </div>
@@ -113,7 +116,7 @@ export default class Checkout extends React.Component {
                         })
                     }
                 </div>
-            </div>
+            </React.Fragment>
         )
     }
-}
+} 

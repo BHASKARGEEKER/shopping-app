@@ -48,12 +48,10 @@ const PublicRoute = (props) => {
 }
 
 
-function App() {
+export default function App() {
   return (
     <div className="App">
       <h1>Shopping App</h1>
-      <ProductFeed />
-      Hello
       {
         isUserLoggedIn ? (
           <button
